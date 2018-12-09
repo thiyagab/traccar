@@ -31,12 +31,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.traccar.Config;
-import org.traccar.api.AsyncSocketServlet;
-import org.traccar.api.CorsResponseFilter;
-import org.traccar.api.MediaFilter;
-import org.traccar.api.ObjectMapperProvider;
-import org.traccar.api.ResourceErrorHandler;
-import org.traccar.api.SecurityRequestFilter;
+import org.traccar.api.*;
 import org.traccar.api.resource.ServerResource;
 
 import javax.servlet.DispatcherType;
@@ -136,6 +131,7 @@ public class WebServer {
 
     private void initApi(Config config, ServletContextHandler servletHandler) {
         servletHandler.addServlet(new ServletHolder(new AsyncSocketServlet()), "/api/socket");
+        servletHandler.addServlet(new ServletHolder(new AsyncSocketOpenServlet()), "/api/track/*");
 
         if (config.hasKey("media.path")) {
             ServletHolder servletHolder = new ServletHolder(DefaultServlet.class);

@@ -52,6 +52,7 @@ public class ConnectionManager {
     private final Map<Long, ActiveDevice> activeDevices = new ConcurrentHashMap<>();
     private final Map<Long, Set<UpdateListener>> listeners = new ConcurrentHashMap<>();
     private final Map<Long, Timeout> timeouts = new ConcurrentHashMap<>();
+    private final Map<Long, Set<UpdateListener>> timedlisteners = new ConcurrentHashMap<>();
 
     public ConnectionManager() {
         deviceTimeout = Context.getConfig().getLong("status.timeout", DEFAULT_TIMEOUT) * 1000;
@@ -209,6 +210,20 @@ public class ConnectionManager {
             listeners.put(userId, new HashSet<UpdateListener>());
         }
         listeners.get(userId).remove(listener);
+    }
+
+    public synchronized void addTimedListener(long trackid, UpdateListener listener) {
+        if (!listeners.containsKey(trackid)) {
+            listeners.put(trackid, new HashSet<UpdateListener>());
+        }
+        listeners.get(trackid).add(listener);
+    }
+
+    public synchronized void removeTimedListener(long trackid, UpdateListener listener) {
+        if (!listeners.containsKey(trackid)) {
+            listeners.put(trackid, new HashSet<UpdateListener>());
+        }
+        listeners.get(trackid).remove(listener);
     }
 
 }
