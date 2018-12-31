@@ -25,7 +25,18 @@
         <constraints nullable="true" />
       </column>
     </createTable>
+    <createTable tableName="tc_user_trackdevice">
+      <column name="userid" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="trackDeviceId" type="INT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
     <addForeignKeyConstraint baseTableName="tc_trackdevices" baseColumnNames="deviceId" constraintName="fk_trackdevice_deviceid" referencedTableName="tc_devices" referencedColumnNames="id" onDelete="CASCADE" />
+
+    <addForeignKeyConstraint baseTableName="tc_user_trackdevice" baseColumnNames="userid" constraintName="fk_user_trackdevice_userid" onDelete="CASCADE" referencedColumnNames="id" referencedTableName="tc_users" />
+    <addForeignKeyConstraint baseTableName="tc_user_trackdevice" baseColumnNames="trackDeviceId" constraintName="fk_user_trackdevice_trackDeviceId" onDelete="CASCADE" referencedColumnNames="id" referencedTableName="tc_trackdevices" />
   </changeSet>
 
 </databaseChangeLog>

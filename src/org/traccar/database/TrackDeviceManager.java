@@ -5,11 +5,13 @@ import org.traccar.model.TrackDevice;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class TrackDeviceManager extends BaseObjectManager<TrackDevice> implements ManagableObjects  {
 
-    private Map<Long, Set<TrackDevice>> deviceTrackerMap= new HashMap<>();
+    //Map to store trackdevice objects for given device, the default items map store the objectid->objects
+    private Map<Long, Set<TrackDevice>> deviceTrackerMap;
 
     public TrackDeviceManager(DataManager dataManager) {
         super(dataManager,TrackDevice.class);
@@ -62,6 +64,13 @@ public class TrackDeviceManager extends BaseObjectManager<TrackDevice> implement
     }
 
 
+    @Override
+    public void refreshItems() {
+        if(deviceTrackerMap==null){
+            deviceTrackerMap= new ConcurrentHashMap<>();
+        }
+        super.refreshItems();
+    }
 
     protected void addNewItem(TrackDevice item) {
         super.addNewItem(item);

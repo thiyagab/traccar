@@ -2,7 +2,7 @@ package org.traccar.model;
 
 import java.util.Date;
 
-public class TrackDevice extends ExtendedModel {
+public class TrackDevice extends BaseModel {
 
     private long deviceId;
     private Date startTime;
