@@ -27,25 +27,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.eclipse.jetty.util.URIUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.traccar.database.CalendarManager;
-import org.traccar.database.CommandsManager;
-import org.traccar.database.AttributesManager;
-import org.traccar.database.BaseObjectManager;
-import org.traccar.database.ConnectionManager;
-import org.traccar.database.DataManager;
-import org.traccar.database.DeviceManager;
-import org.traccar.database.DriversManager;
-import org.traccar.database.IdentityManager;
-import org.traccar.database.LdapProvider;
-import org.traccar.database.MailManager;
-import org.traccar.database.MaintenancesManager;
-import org.traccar.database.MediaManager;
-import org.traccar.database.NotificationManager;
-import org.traccar.database.PermissionsManager;
-import org.traccar.database.GeofenceManager;
-import org.traccar.database.GroupsManager;
-import org.traccar.database.StatisticsManager;
-import org.traccar.database.UsersManager;
+import org.traccar.database.*;
 import org.traccar.events.MotionEventHandler;
 import org.traccar.events.OverspeedEventHandler;
 import org.traccar.geocoder.AddressFormat;
@@ -63,17 +45,7 @@ import org.traccar.geocoder.Geocoder;
 import org.traccar.geolocation.UnwiredGeolocationProvider;
 import org.traccar.helper.Log;
 import org.traccar.helper.SanitizerModule;
-import org.traccar.model.Attribute;
-import org.traccar.model.BaseModel;
-import org.traccar.model.Calendar;
-import org.traccar.model.Command;
-import org.traccar.model.Device;
-import org.traccar.model.Driver;
-import org.traccar.model.Geofence;
-import org.traccar.model.Group;
-import org.traccar.model.Maintenance;
-import org.traccar.model.Notification;
-import org.traccar.model.User;
+import org.traccar.model.*;
 import org.traccar.geolocation.GoogleGeolocationProvider;
 import org.traccar.geolocation.GeolocationProvider;
 import org.traccar.geolocation.MozillaGeolocationProvider;
@@ -159,6 +131,12 @@ public final class Context {
 
     public static DeviceManager getDeviceManager() {
         return deviceManager;
+    }
+
+    private static TrackDeviceManager trackDeviceManager;
+
+    public static TrackDeviceManager getTrackDeviceManager() {
+        return trackDeviceManager;
     }
 
     private static ConnectionManager connectionManager;
@@ -394,6 +372,7 @@ public final class Context {
             usersManager = new UsersManager(dataManager);
             groupsManager = new GroupsManager(dataManager);
             deviceManager = new DeviceManager(dataManager);
+            trackDeviceManager= new TrackDeviceManager(dataManager);
         }
 
         identityManager = deviceManager;
@@ -530,6 +509,8 @@ public final class Context {
             return (BaseObjectManager<T>) maintenancesManager;
         } else if (clazz.equals(Notification.class)) {
             return (BaseObjectManager<T>) notificationManager;
+        } else if(clazz.equals(TrackDevice.class)){
+            return (BaseObjectManager<T>) trackDeviceManager;
         }
         return null;
     }

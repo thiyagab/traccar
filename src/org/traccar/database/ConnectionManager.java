@@ -18,6 +18,7 @@ package org.traccar.database;
 import io.netty.channel.Channel;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
+import org.h2.command.dml.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.traccar.Context;
@@ -182,6 +183,13 @@ public class ConnectionManager {
                 }
             }
         }
+
+        for (Set<UpdateListener> listeners:timedlisteners.values()) {
+            for(UpdateListener listener: listeners){
+                listener.onUpdatePosition(position);
+            }
+        }
+
     }
 
     public synchronized void updateEvent(long userId, Event event) {

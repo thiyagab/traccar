@@ -124,4 +124,8 @@ public class BaseObjectManager<T extends BaseModel> {
         return items.keySet();
     }
 
+    public Collection<T> getAllValues(){
+        return items.values();
+    }
+
 }

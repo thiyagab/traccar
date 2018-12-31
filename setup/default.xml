@@ -75,6 +75,14 @@
         SELECT * FROM tc_statistics WHERE captureTime BETWEEN :from AND :to ORDER BY captureTime
     </entry>
 
+    <entry key='database.selectTrackDevice'>
+        SELECT * FROM tc_trackdevice WHERE deviceId = :deviceId
+    </entry>
+
+    <entry key='database.deleteTrackDevice'>
+        DELETE * FROM tc_trackdevice WHERE deviceId = :deviceId
+    </entry>
+
     <entry key='gps103.port'>5001</entry>
     <entry key='tk103.port'>5002</entry>
     <entry key='gl100.port'>5003</entry>

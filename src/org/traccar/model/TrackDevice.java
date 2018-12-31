@@ -4,9 +4,10 @@ import java.util.Date;
 
 public class TrackDevice extends ExtendedModel {
 
-    long deviceId;
-    Date startTime;
-    Date endTime;
+    private long deviceId;
+    private Date startTime;
+    private Date endTime;
+//    private long userId;
 
 
     public long getDeviceId() {
@@ -32,4 +33,12 @@ public class TrackDevice extends ExtendedModel {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
+
+//    public void setUserId(long userId) {
+//        this.userId = userId;
+//    }
+//
+//    public long getUserId() {
+//        return userId;
+//    }
 }

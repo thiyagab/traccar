@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd"
+  logicalFilePath="changelog-4.2">
+
+  <changeSet author="author" id="changelog-4.2-mssql">
+
+    <createTable tableName="tc_trackdevices">
+      <column name="id" type="INT" autoIncrement="true">
+        <constraints primaryKey="true" />
+      </column>
+      <column name="deviceId" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="startTime" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="endTime" type="TIMESTAMP">
+        <constraints nullable="false" />
+      </column>
+      <column name="attributes" type="VARCHAR(4000)">
+        <constraints nullable="true" />
+      </column>
+    </createTable>
+    <addForeignKeyConstraint baseTableName="tc_trackdevices" baseColumnNames="deviceId" constraintName="fk_trackdevice_deviceid" referencedTableName="tc_devices" referencedColumnNames="id" onDelete="CASCADE" />
+  </changeSet>
+
+</databaseChangeLog>
