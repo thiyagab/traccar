@@ -76,11 +76,11 @@
     </entry>
 
     <entry key='database.selectTrackDevice'>
-        SELECT * FROM tc_trackdevice WHERE deviceId = :deviceId
+        SELECT * FROM tc_trackdevices WHERE id = :id
     </entry>
 
     <entry key='database.deleteTrackDevice'>
-        DELETE * FROM tc_trackdevice WHERE deviceId = :deviceId
+        DELETE FROM tc_trackdevices WHERE id = :id
     </entry>
 
     <entry key='gps103.port'>5001</entry>

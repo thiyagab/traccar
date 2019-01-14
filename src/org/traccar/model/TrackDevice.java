@@ -1,5 +1,6 @@
 package org.traccar.model;
 
+import javax.sound.midi.Track;
 import java.util.Date;
 
 public class TrackDevice extends BaseModel {
@@ -41,4 +42,9 @@ public class TrackDevice extends BaseModel {
 //    public long getUserId() {
 //        return userId;
 //    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof TrackDevice && getId()==((TrackDevice)obj).getId();
+    }
 }

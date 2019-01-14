@@ -18,20 +18,7 @@ package org.traccar.database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.traccar.Context;
-import org.traccar.model.Attribute;
-import org.traccar.model.BaseModel;
-import org.traccar.model.Calendar;
-import org.traccar.model.Command;
-import org.traccar.model.Device;
-import org.traccar.model.Driver;
-import org.traccar.model.Geofence;
-import org.traccar.model.Group;
-import org.traccar.model.Maintenance;
-import org.traccar.model.ManagedUser;
-import org.traccar.model.Notification;
-import org.traccar.model.Permission;
-import org.traccar.model.Server;
-import org.traccar.model.User;
+import org.traccar.model.*;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -345,7 +332,10 @@ public class PermissionsManager {
             manager = Context.getMaintenancesManager();
         } else if (object.equals(Notification.class)) {
             manager = Context.getNotificationManager();
-        } else {
+        } else if (object.equals(TrackDevice.class)){
+            manager=Context.getTrackDeviceManager();
+        }
+        else {
             throw new IllegalArgumentException("Unknown object type");
         }
 

@@ -21,9 +21,6 @@
       <column name="endTime" type="TIMESTAMP">
         <constraints nullable="false" />
       </column>
-      <column name="attributes" type="VARCHAR(4000)">
-        <constraints nullable="true" />
-      </column>
     </createTable>
     <createTable tableName="tc_user_trackdevice">
       <column name="userid" type="INT">

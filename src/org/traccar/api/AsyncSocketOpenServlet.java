@@ -33,7 +33,6 @@ public class AsyncSocketOpenServlet extends WebSocketServlet {
             @Override
             public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
                 if (req.getParameterMap() != null) {
-
                     try {
                         long trackerid = Long.valueOf(req.getParameterMap().get("trackerid").get(0));
                         return new AsyncOpenSocket(trackerid);

@@ -27,6 +27,7 @@ import org.traccar.model.Event;
 import org.traccar.model.Position;
 import org.traccar.model.TrackDevice;
 
+import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -41,25 +42,26 @@ public class AsyncOpenSocket extends WebSocketAdapter implements ConnectionManag
 
     public AsyncOpenSocket(long trackerid) throws SQLException {
         trackdevice=Context.getDataManager().getObject(TrackDevice.class,trackerid);
+        if(trackdevice==null){
+            //TODO heights of laziness and Worst to throw sqlexception
+            throw new SQLDataException("Object not found");
+        }
     }
 
     @Override
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
-
-        Map<String, Collection<?>> data = new HashMap<>();
-        data.put(KEY_POSITIONS,
-                Collections.singletonList(Context.getDeviceManager().getLastPosition(trackdevice.getDeviceId())));
-        sendData(data);
-
-        Context.getConnectionManager().addListener(trackdevice.getId(), this);
+        if(validateAndSendPosition(
+                Context.getDeviceManager().getLastPosition(trackdevice.getDeviceId()))) {
+            Context.getConnectionManager().addTimedListener(trackdevice.getId(), this);
+        }
+        sendDummyDataPeriodically();
     }
 
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
         super.onWebSocketClose(statusCode, reason);
-
-        Context.getConnectionManager().removeListener(trackdevice.getId(), this);
+        Context.getConnectionManager().removeTimedListener(trackdevice.getId(), this);
     }
 
     @Override
@@ -70,15 +72,24 @@ public class AsyncOpenSocket extends WebSocketAdapter implements ConnectionManag
     @Override
     public void onUpdatePosition(Position position) {
         if(position.getDeviceId()==trackdevice.getDeviceId()) {
-            Map<String, Collection<?>> data = new HashMap<>();
-            if (validateTimeWindow()) {
-                data.put(KEY_POSITIONS, Collections.singletonList(position));
-            }else{
-                data.put("error",Collections.singletonList("Expired"));
-//                Context.getConnectionManager().removeListener(trackdevice.getId(), this);
+            if(!validateAndSendPosition(position)){
+
+                Context.getConnectionManager().removeTimedListener(trackdevice.getId(), this);
             }
-            sendData(data);
         }
+    }
+
+    private boolean validateAndSendPosition(Position position) {
+        Map<String, Collection<?>> data = new HashMap<>();
+        boolean inTimeWindow=validateTimeWindow();
+        if (inTimeWindow) {
+            data.put(KEY_POSITIONS, Collections.singletonList(position));
+        }else{
+            data.put("error",Collections.singletonList("Expired"));
+//                Context.getConnectionManager().removeListener(trackdevice.getId(), this);
+        }
+        sendData(data);
+        return inTimeWindow;
     }
 
     private boolean validateTimeWindow() {
@@ -100,5 +111,28 @@ public class AsyncOpenSocket extends WebSocketAdapter implements ConnectionManag
                 LOGGER.warn("Socket JSON formatting error", e);
             }
         }
+    }
+
+
+    static double latitude=12.97;
+    static double longitude=80.21;
+
+    public void sendDummyDataPeriodically(){
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                dummyData();
+            }
+        },5000,5000);
+    }
+
+    public void dummyData(){
+        Position position = new Position();
+        position.setLatitude(latitude*=1.00001);
+        position.setLongitude(longitude);
+        Map<String, Collection<?>> data = new HashMap<>();
+        data.put(KEY_POSITIONS, Collections.singletonList(position));
+        sendData(data);
     }
 }

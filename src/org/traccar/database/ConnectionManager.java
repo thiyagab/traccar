@@ -221,17 +221,17 @@ public class ConnectionManager {
     }
 
     public synchronized void addTimedListener(long trackid, UpdateListener listener) {
-        if (!listeners.containsKey(trackid)) {
-            listeners.put(trackid, new HashSet<UpdateListener>());
+        if (!timedlisteners.containsKey(trackid)) {
+            timedlisteners.put(trackid, new HashSet<UpdateListener>());
         }
-        listeners.get(trackid).add(listener);
+        timedlisteners.get(trackid).add(listener);
     }
 
     public synchronized void removeTimedListener(long trackid, UpdateListener listener) {
-        if (!listeners.containsKey(trackid)) {
-            listeners.put(trackid, new HashSet<UpdateListener>());
+        if (!timedlisteners.containsKey(trackid)) {
+            timedlisteners.put(trackid, new HashSet<UpdateListener>());
         }
-        listeners.get(trackid).remove(listener);
+        timedlisteners.get(trackid).remove(listener);
     }
 
 }

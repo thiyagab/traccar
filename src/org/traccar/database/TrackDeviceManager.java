@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class TrackDeviceManager extends BaseObjectManager<TrackDevice> implements ManagableObjects  {
+public class TrackDeviceManager extends SimpleObjectManager<TrackDevice> implements ManagableObjects  {
 
     //Map to store trackdevice objects for given device, the default items map store the objectid->objects
     private Map<Long, Set<TrackDevice>> deviceTrackerMap;
@@ -17,30 +17,6 @@ public class TrackDeviceManager extends BaseObjectManager<TrackDevice> implement
         super(dataManager,TrackDevice.class);
     }
 
-    @Override
-    public Set<Long> getUserItems(long userId) {
-        if (Context.getPermissionsManager() != null) {
-            Set<Long> result = new HashSet<>();
-            for (long deviceId : Context.getPermissionsManager().getDevicePermissions(userId)) {
-                getAllValues().parallelStream()
-                        .filter(trackDevice -> trackDevice.getDeviceId()==deviceId)
-                        .forEach(trackDevice -> result.add(trackDevice.getId()));
-            }
-            return result;
-        } else {
-            return new HashSet<>();
-        }
-    }
-
-    @Override
-    public Set<Long> getManagedItems(long userId) {
-        Set<Long> result = new HashSet<>();
-        result.addAll(getUserItems(userId));
-        for (long managedUserId : Context.getUsersManager().getUserItems(userId)) {
-            result.addAll(getUserItems(managedUserId));
-        }
-        return result;
-    }
 
     public Collection<TrackDevice> getUserTrackedDevices(long userId){
         return getItems(getUserItems(userId));
@@ -95,8 +71,8 @@ public class TrackDeviceManager extends BaseObjectManager<TrackDevice> implement
     }
 
     public void removeDeviceTrackers(long deviceId) throws SQLException {
-        //TODO remove from database
-        removeDeviceTrackers(deviceId);
+        //TODO remove from database or check if it will be removed by cascade if device is deletedi
+
 
     }
 
